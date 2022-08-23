@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -24,7 +25,7 @@ type Badge struct {
 	Achievement string `json:"achievement"`
 }
 
-func readContributorsFromCsv(filepath string) (contributors Contributors) {
+func getContributorsFromCsv(filepath string) (contributors Contributors) {
 	opencast, err := os.Open(filepath)
 	if err != nil {
 		log.Fatal("csv文件打开失败！")
@@ -119,9 +120,26 @@ func removeBracket(src string) string {
 	return string(destBytes)
 }
 
-func GenContributorsJson(csvPath, outputPath string) {
-	contributors := readContributorsFromCsv(csvPath)
+func GenContributorsJson(csvDir, outputPath string) {
+	files, err := getFilesOfDir(csvDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(files) == 0 {
+		log.Fatalf("%s 文件夹下未检测到任何 csv 文件", csvDir)
+	}
+
+	var contributors Contributors
+	for _, file := range files {
+		contributors = append(contributors, getContributorsFromCsv(file)...)
+	}
 	fmt.Println(contributors[:3:len(contributors)].ToJson())
+
+	// 创建文件夹
+	err = os.MkdirAll(filepath.Dir(outputPath), 0755)
+	if err != nil {
+		log.Fatalf("创建文件夹 %s 失败: %v", filepath.Dir(outputPath), err)
+	}
 	file, err := os.Create(outputPath)
 	if err != nil {
 		log.Fatal(err)
@@ -130,4 +148,15 @@ func GenContributorsJson(csvPath, outputPath string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getFilesOfDir(dir string) (files []string, err error) {
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if filepath.Ext(path) == ".csv" {
+			files = append(files, path)
+		}
+		return nil
+	})
+
+	return
 }
