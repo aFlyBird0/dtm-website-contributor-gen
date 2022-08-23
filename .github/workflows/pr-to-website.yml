@@ -1,0 +1,69 @@
+name: pr-to-website
+
+on:
+  push:
+    branches:
+      - main
+env:
+  go-version: 1.18.x
+
+jobs:
+    pr-to-website:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Checkout website repo
+        uses: actions/checkout@v3
+        with:
+          repository: devstream-io/website
+          path: website
+
+      - name: Install Go ${{ env.go-version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.go-version }}
+      - name: generate json
+        run: |
+          pwd
+          ls
+          go run ./ --output=./website/contributor-info/contributors.json --data=secretExample/Contributors.csv
+
+      - name: set branch name
+        run: |
+          echo "branch_name=auto-update-contributors-$(date "+%Y%m%d-%H%M%S")" >> $GITHUB_ENV
+#      - name: commit and push
+#        uses: github-actions-x/commit@v2.9
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          push-branch: ${{ env.branch_name }}
+#          commit-message: 'feat: auto update contributors'
+#          name: "aFlyBird0"
+#          email: "aflybird0@gmail.com"
+#      - name: git commit
+#        run: |
+#          cd website
+#          ls -al
+#          git config --global user.email "aflybird0@gmail.com"
+#          git config --global user.name "aFLyBird0"
+#          git add .
+#          time=$(date "+%Y%m%d-%H%M%S")
+#          git checkout -b auto-update-contributors-$time
+#          git commit -m "feat: auto update contributors" -s
+#          git status
+#          git push --set-upstream origin auto-update-contributors-$time
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{secrets.TOKEN_WRITE}}
+          title: feat:auto update contributors(by ci)
+          path: website
+          branch: ${{ env.branch_name }}
+          commit-message: "feat: auto update contributors"
+          signoff: true
+          committer: aFLyBird0 <aflybird0@gmail.com>
+          delete-branch: true
+          push-to-fork: aFlyBird0/website
+          reviewers: daniel-hutao,aFlyBird0
+          assignees: daniel-hutao,aFlyBird0

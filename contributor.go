@@ -133,7 +133,11 @@ func GenContributorsJson(csvDir, outputPath string) {
 	for _, file := range files {
 		contributors = append(contributors, getContributorsFromCsv(file)...)
 	}
-	fmt.Println(contributors[:3:len(contributors)].ToJson())
+	printLines := 3
+	if len(contributors) < 3 {
+		printLines = len(contributors)
+	}
+	fmt.Println(contributors[:printLines].ToJson())
 
 	// 创建文件夹
 	err = os.MkdirAll(filepath.Dir(outputPath), 0755)
