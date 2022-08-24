@@ -149,7 +149,7 @@ func GenContributorsJson(csvDir, outputPath string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = file.WriteString(contributors.ToJson())
+	_, err = file.WriteString(contributors.ToJson() + "\n")
 	if err != nil {
 		log.Fatal(err)
 	}

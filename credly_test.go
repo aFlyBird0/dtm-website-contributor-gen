@@ -29,11 +29,11 @@ func TestHandleCredlyLink(t *testing.T) {
 		},
 		{
 			origin:   "abc",
-			expected: "",
+			expected: defaultBadgeLink,
 		},
 		{
 			origin:   "",
-			expected: "",
+			expected: defaultBadgeLink,
 		},
 	}
 
