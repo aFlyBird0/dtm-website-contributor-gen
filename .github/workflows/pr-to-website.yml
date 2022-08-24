@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**.csv'
 env:
   go-version: 1.18.x
 

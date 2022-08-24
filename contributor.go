@@ -35,12 +35,12 @@ func getContributorsFromCsv(filepath string) (contributors Contributors) {
 	//创建csv读取接口实例
 	ReadCsv := csv.NewReader(opencast)
 
-	//获取一行内容，一般为第一行内容
+	//获取文件标题行
 	read, _ := ReadCsv.Read() //返回切片类型：[chen  hai wei]
 	log.Println(read)
 
 	//读取所有内容
-	// "GitHub ID","人员","微信昵称（ID）","证书日期","证书类型","证书顺序","证书发放","礼物寄送","邮箱","证书英文名"
+	// "GitHub ID","人员","微信昵称（ID）","证书日期","证书类型","证书顺序","证书发放","礼物寄送","邮箱","证书英文名","Credly链接"
 	all, err := ReadCsv.ReadAll() //返回切片类型：[[s s ds] [a a a]]
 	if err != nil {
 		log.Fatal(err)
@@ -56,14 +56,15 @@ func getContributorsFromCsv(filepath string) (contributors Contributors) {
 		// GitHub ID(昵称)
 		github := removeBracket(strings.TrimSpace(line[0]))
 		// 证书日期, 2022/03/05
-		date := line[3]
+		date := strings.TrimSpace(line[3])
+		// Credly链接
+		certificationLink := handleCredlyLink(line[9])
 		contributor := Contributor{
 			Name:              name,
-			Email:             line[8],
+			Email:             strings.TrimSpace(line[8]),
 			Avatar:            "https://avatars.githubusercontent.com/" + github,
-			CertificationLink: "https://www.credly.com/organizations/devstream/badge", // 这个链接后面手动一个个改
-			//Badge:             badge,
-			DateAdded: date,
+			CertificationLink: certificationLink,
+			DateAdded:         date,
 		}
 
 		certifyType := line[4]

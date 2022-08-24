@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestRemoveBracket(t *testing.T) {
 	if removeBracket("wzymumon(mumon)") != "wzymumon" {
