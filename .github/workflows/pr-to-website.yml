@@ -30,7 +30,7 @@ jobs:
         run: |
           pwd
           ls
-          go run ./ --output=./website/contributor-info/contributors.json --data=secretExample/Contributors.csv
+          go run ./ --output=./website/contributor-info/contributors.json --data=secretExample
 
       - name: set branch name
         run: |
