@@ -12,6 +12,8 @@ func strAllLetter(str string) bool {
 	return match
 }
 
+// 把中文名字转换为拼音
+// 支持三个字以内的名字，否则请直接手动修改 csv 中的 「证书英文名」字段
 func nameToPinyin(name string) string {
 	if strings.TrimSpace(name) == "" {
 		return ""

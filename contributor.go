@@ -75,9 +75,9 @@ func getContributorsFromCsv(filepath string) (contributors Contributors) {
 		case "Contributor - Professional":
 			badge = &Badge{Type: "Open-Source Contributor", Achievement: "Professional"}
 		case "Evangelist - Associate":
-			badge = &Badge{Type: "Evangelist", Achievement: "Associate"}
+			badge = &Badge{Type: "Open-Source Evangelist", Achievement: "Associate"}
 		case "Evangelist - Professional":
-			badge = &Badge{Type: "Evangelist", Achievement: "Professional"}
+			badge = &Badge{Type: "Open-Source Evangelist", Achievement: "Professional"}
 		case "Speaker - Associate":
 			badge = &Badge{Type: "Talented Speaker", Achievement: "Associate"}
 		case "Speaker - Professional":
