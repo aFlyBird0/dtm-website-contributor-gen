@@ -58,7 +58,7 @@ func getContributorsFromCsv(filepath string) (contributors Contributors) {
 		// 证书日期, 2022/03/05
 		date := strings.TrimSpace(line[3])
 		// Credly链接
-		certificationLink := handleCredlyLink(line[9])
+		certificationLink := handleCredlyLink(line[10])
 		contributor := Contributor{
 			Name:              name,
 			Email:             strings.TrimSpace(line[8]),
