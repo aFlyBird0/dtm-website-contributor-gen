@@ -41,14 +41,17 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "feat: update contributors(auto by ci)"
+          # 需要手动配置一个带有 repo 写权限的 GitHub Personal Access Token
+          token: ${{ secrets.TOKEN_WRITE }}
           path: website # 要提 pr 的仓库的位置，即 website 仓库对应的位置。一般和 website 的 repo 名相同。
           branch: ${{ env.branch_name }}
+          title: "feat: update contributors(auto by ci)"
           commit-message: "feat: update contributors(auto by ci)"
+          body: "Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action"
           signoff: true
           committer: aFLyBird0 <aflybird0@gmail.com>
           delete-branch: true
           push-to-fork: aFlyBird0/website # 先 push 到自己的 fork 仓库里，通过 fork 的仓库提 pr
           reviewers: daniel-hutao,aFlyBird0
           assignees: daniel-hutao,aFlyBird0
+          labels: bot
