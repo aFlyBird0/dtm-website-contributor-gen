@@ -19,7 +19,7 @@ jobs:
       - name: Checkout website repo
         uses: actions/checkout@v3
         with:
-          repository: devstream-io/website
+          repository: devstream-io/website  # 下载 website 仓库
           path: website
 
       - name: Install Go ${{ env.go-version }}
@@ -30,42 +30,24 @@ jobs:
         run: |
           pwd
           ls
+          # 运行程序，其中 output 是生成的 json 文件，这里直接覆盖 website 里的相应文件
+          # data 是 csv 来源文件夹
           go run ./ --output=./website/contributor-info/contributors.json --data=secretExample
 
       - name: set branch name
         run: |
+          # 给分支名字加上时间属性，保证每次pr使用的都是不同的分支，防止冲突
           echo "branch_name=auto-update-contributors-$(date "+%Y%m%d-%H%M%S")" >> $GITHUB_ENV
-#      - name: commit and push
-#        uses: github-actions-x/commit@v2.9
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          push-branch: ${{ env.branch_name }}
-#          commit-message: 'feat: auto update contributors'
-#          name: "aFlyBird0"
-#          email: "aflybird0@gmail.com"
-#      - name: git commit
-#        run: |
-#          cd website
-#          ls -al
-#          git config --global user.email "aflybird0@gmail.com"
-#          git config --global user.name "aFLyBird0"
-#          git add .
-#          time=$(date "+%Y%m%d-%H%M%S")
-#          git checkout -b auto-update-contributors-$time
-#          git commit -m "feat: auto update contributors" -s
-#          git status
-#          git push --set-upstream origin auto-update-contributors-$time
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{secrets.TOKEN_WRITE}}
-          title: feat:update contributors(auto by ci)
-          path: website
+          title: "feat: update contributors(auto by ci)"
+          path: website # 要提 pr 的仓库的位置，即 website 仓库对应的位置。一般和 website 的 repo 名相同。
           branch: ${{ env.branch_name }}
-          commit-message: "feat: auto update contributors"
+          commit-message: "feat: update contributors(auto by ci)"
           signoff: true
           committer: aFLyBird0 <aflybird0@gmail.com>
           delete-branch: true
-          push-to-fork: aFlyBird0/website
+          push-to-fork: aFlyBird0/website # 先 push 到自己的 fork 仓库里，通过 fork 的仓库提 pr
           reviewers: daniel-hutao,aFlyBird0
           assignees: daniel-hutao,aFlyBird0
