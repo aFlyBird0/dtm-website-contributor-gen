@@ -4,12 +4,10 @@ DevStream 的官网有个[社区英雄榜](https://www.devstream.io/community/co
 这个仓库用来从贡献者表格直接生成相应的 json 文件，并且直接提个 pr 到 [website](https://github.com/devstream-io/website) 仓库。
 
 ## 使用方法
-下载贡献者表格，保存成 csv 格式，放到特定的文件夹，并且设置 `/.github/workflows/pr-to-website.yml` 中的 `--data` 为该文件夹，该文件夹下的所有 csv 文件都会被读取并融合成一个 json。
+视图切换到 **"下载专用（脱敏）"**，下载贡献者表格，保存成 `csv` 格式，放到此项目内某文件夹，并且设置 `/.github/workflows/pr-to-website.yml` 中的 `--data` 为该文件夹，该文件夹下的所有 `csv` 文件都会被读取并融合成一个 json。
 csv 文件模板在 `/secretExample` 文件下。
 
-建议将此仓库 clone 后重新上传至 GitHub，然后设为私有，防止 csv 文件暴露敏感数据。
-
-之后就是更新 csv 文件，`git add, commit, push`, 等待 pr 自动生成。
+之后就是更新 `csv` 文件，`git add, commit, push`, 等待 pr 自动生成。
 
 
 ## 自定义配置
@@ -22,18 +20,18 @@ csv 文件模板在 `/secretExample` 文件下。
 3. 给仓库设置一个名为 `TOKEN_WRITE` 的 secrets，值是一个拥有仓库写权限的 GitHub Personal Access Token。
 
 ### 2. 由其他社区使用
-在 `1. 由 DevStream 其他组员使用` 的基础上，针对 csv 的格式、仓库的地址、社区自己的 website 的 json 文件存储位置等内容，修改代码和 `/.github/workflows/pr-to-website.yml` 文件。
+在 `1. 由 DevStream 其他组员使用` 的基础上，针对 `csv` 的格式、仓库的地址、社区自己的 website 的 json 文件存储位置等内容，修改代码和 `/.github/workflows/pr-to-website.yml` 文件。
 
 ## 自动化
-可以配合额外的脚本执行，将 csv 下载和 git 操作集成到脚本里，然后把脚本放到桌面。
+可以配合额外的脚本执行，将 `csv` 下载和 git 操作集成到脚本里，然后把脚本放到桌面。
 
-这样就能实现在飞书表格页面点一下下载，然后再到桌面双击运行一下脚本，后续自动执行 csv 位置移动、git add、git commit、git push、json 转换、提 pr 操作。
+这样就能实现在飞书表格页面点一下下载，然后再到桌面双击运行一下脚本，后续自动执行 `csv` 位置移动、git add、git commit、git push、json 转换、提 pr 操作。
 
 参考脚本如下，请自行替换相应信息：
 
 ```shell
 rm -rf ~/Code/Go/tmp/dtm-website-contributor-gen/secretExample/**.csv
-mv ~/Downloads/所有证书.csv ~/Code/Go/tmp/dtm-website-contributor-gen/secretExample/
+mv ~/Downloads/"开源社区贡献者与证书管理_所有证书_下载专用（脱敏）.csv" ~/Code/Go/tmp/dtm-website-contributor-gen/secretExample/
 cd ~/Code/Go/tmp/dtm-website-contributor-gen
 git add .
 git commit -m "feat: update contributors info(auto by shell)" -s
