@@ -32,23 +32,23 @@ func getContributorsFromCsv(filepath string) (contributors Contributors) {
 	}
 	defer opencast.Close()
 
-	//创建csv读取接口实例
+	// 创建csv读取接口实例
 	ReadCsv := csv.NewReader(opencast)
 
-	//获取文件标题行
+	// 获取文件标题行
+	// GitHub ID,人员,证书日期,证书类型,邮箱,证书英文名,Credly链接
 	read, _ := ReadCsv.Read() //返回切片类型：[chen  hai wei]
 	log.Println(read)
 
-	//读取所有内容
-	// "GitHub ID","人员","微信昵称（ID）","证书日期","证书类型","证书顺序","证书发放","礼物寄送","邮箱","证书英文名","Credly链接"
-	all, err := ReadCsv.ReadAll() //返回切片类型：[[s s ds] [a a a]]
+	// 读取所有内容
+	all, err := ReadCsv.ReadAll()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, line := range all {
 		// 证书名字, 默认用「证书英文名」
-		name := strings.TrimSpace(line[9])
+		name := strings.TrimSpace(line[5])
 		if name == "" {
 			// 否则使用中文拼音
 			name = nameToPinyin(strings.TrimSpace(line[1]))
@@ -56,18 +56,18 @@ func getContributorsFromCsv(filepath string) (contributors Contributors) {
 		// GitHub ID(昵称)
 		github := removeBracket(strings.TrimSpace(line[0]))
 		// 证书日期, 2022/03/05
-		date := strings.TrimSpace(line[3])
+		date := strings.TrimSpace(line[2])
 		// Credly链接
-		certificationLink := handleCredlyLink(line[10])
+		certificationLink := handleCredlyLink(line[6])
 		contributor := Contributor{
 			Name:              name,
-			Email:             strings.TrimSpace(line[8]),
+			Email:             strings.TrimSpace(line[4]),
 			Avatar:            "https://avatars.githubusercontent.com/" + github,
 			CertificationLink: certificationLink,
 			DateAdded:         date,
 		}
 
-		certifyType := line[4]
+		certifyType := line[3]
 		var badge *Badge
 		switch certifyType {
 		case "Contributor - Associate":
