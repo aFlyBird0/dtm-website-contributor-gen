@@ -9,6 +9,11 @@ on:
 env:
   go-version: 1.18.x
 
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
 jobs:
     pr-to-website:
       runs-on: ubuntu-latest
@@ -42,7 +47,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           # 需要手动配置一个带有 repo 写权限的 GitHub Personal Access Token
-          token: ${{ secrets.TOKEN_WRITE }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           path: website # 要提 pr 的仓库的位置，即 website 仓库对应的位置。一般和 website 的 repo 名相同。
           branch: ${{ env.branch_name }}
           title: "feat: update contributors(auto by ci)"
